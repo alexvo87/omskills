@@ -11,6 +11,7 @@ project, keeps them byte-identical, and adds its own index and provenance notes.
 | [`rust`](rust/) | Idiomatic, fast, and safe Rust for API services and core processing: ownership, errors, async on Tokio, serde, types, memory, unsafe, testing, observability, project layout, lints. Current for Rust 1.96 and the 2024 edition. | [leonardomso/rust-skills](https://github.com/leonardomso/rust-skills) | 265 rules in 26 categories |
 | [`postgres`](postgres/) | Postgres best practices and operations, independent of hosting provider: query performance, connections, RLS, schema design, locking, data access, monitoring, and server operations. | [supabase/agent-skills](https://github.com/supabase/agent-skills), [planetscale/database-skills](https://github.com/planetscale/database-skills) | 43 reference files |
 | [`mariadb`](mariadb/) | MariaDB and MySQL/InnoDB best practices, independent of hosting provider: EXPLAIN and ANALYZE, indexing, pagination, histograms, optimizer switches, schema design, JSON, partitioning, locking and deadlocks, online DDL, connections, replication lag. Includes a MySQL 8 to MariaDB translation table with minimum versions. Two vendor paragraphs are stripped by a scripted step documented in its README. | [mariadb/skills](https://github.com/mariadb/skills), [planetscale/database-skills](https://github.com/planetscale/database-skills) | 19 reference files |
+| [`agentkit-lite`](agentkit-lite/) | Workflow skills that run without the AgentKit CLI or the rest of the kit: `ak:brainstorm` (four-field delivery contract), `ak:plan` (plan and phase files), and the `fullstack-developer` agent. Portability changes are applied by a scripted patch. Not supported standalone: `--html`, `--wiki`, `--github`, `--ultra`, `--advice`, `--debate`, journaling, `ak plan` indexing; see its [README](agentkit-lite/README.md). | AgentKit `ak` 2.18.1 (ak-brainstorm 2.8.2, ak-plan 2.2.2) | 31 skill files plus one agent |
 
 ## Install
 
@@ -32,13 +33,22 @@ Claude Code, project scope (checked in with the repo):
 ln -s ../../path/to/omskills/rust .claude/skills/rust
 ```
 
+`agentkit-lite` is two skills plus an agent, so it installs with its own script
+(add `--project` for `./.claude`, `--uninstall` to remove its symlinks):
+
+```bash
+sh ~/omskills/agentkit-lite/install.sh
+```
+
 Symlinks mean a `git pull` in the clone updates the installed skill. New skills appear
 in the catalog at the next session; invoke with `/rust`, `/postgres`, or `/mariadb`, or let the agent
 activate them from the `description` in each `SKILL.md`.
 
 ## Layout
 
-Every skill follows the same shape:
+Every vendored rule skill follows the same shape (`agentkit-lite` is the exception: it
+holds two skills plus one agent, a `patch.sh`, an `install.sh`, and `UPSTREAM.md` in place
+of `LICENSE-<source>`; see its own README):
 
 ```
 <skill>/
@@ -62,5 +72,6 @@ run the link and byte-identity checks, and record the new commit.
 ## License
 
 Each skill's `references/` files keep their upstream license, stored next to the skill as
-`LICENSE-<source>`. All current upstreams are MIT. The `SKILL.md` and `README.md` files
+`LICENSE-<source>`, except `agentkit-lite`, whose upstream ships no license file and whose
+`license: MIT` frontmatter field is the license statement (recorded in its `UPSTREAM.md`). All current upstreams are MIT. The `SKILL.md` and `README.md` files
 written for this repo are MIT as well.
